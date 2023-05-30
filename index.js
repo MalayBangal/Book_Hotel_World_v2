@@ -60,9 +60,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.use((req, res, next) => {
-	if (!['/login', '/register', '/'].includes(req.originalUrl)) {
-        req.session.returnTo = req.originalUrl;
-    }
+	if (![ '/login', '/register' ].includes(req.originalUrl)) {
+		req.session.returnTo = req.originalUrl;
+	}
 	res.locals.currentUser = req.user;
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');
