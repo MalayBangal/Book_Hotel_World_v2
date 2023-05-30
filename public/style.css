@@ -819,6 +819,7 @@ input:focus {
 .classynav ul li.active a {
   position: relative;
   z-index: 1;
+  color: #1CC3B2 !important;
 }
 
 .classynav ul li.active a::before {

@@ -19,7 +19,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 router.get('/', async (req, res) => {
 	try {
 		const hotels = await Hotel.find().sort({ _id: -1 }).limit(3);
-		res.render('landing', { hotels });
+		res.render('landing', { hotels, page: 'Home' });
 	} catch (error) {
 		req.flash('error', 'error while fetching hotels, please try again later');
 		console.log(error);
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/contact', (req, res) => {
-	res.render('contact');
+	res.render('contact', { page: 'Contact Us' });
 });
 
 router.post('/contact', async (req, res) => {
@@ -52,7 +52,7 @@ router.get('/hotels', async (req, res) => {
 			}
 		};
 		let hotels = await Hotel.paginate({}, options);
-		res.render('hotels/index', { hotels });
+		res.render('hotels/index', { hotels, page: 'Hotels' });
 	} catch (error) {
 		req.flash('error', 'error while fetching hotels, please try again later');
 		console.log(error);
@@ -60,8 +60,24 @@ router.get('/hotels', async (req, res) => {
 	}
 });
 
+router.get('/hotels/search', async (req, res) => {
+	try {
+		let { search } = req.query;
+		if (!search) return res.redirect('/hotels');
+		search = search.replace('%20', ' ');
+		const regex = new RegExp(search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+		const hotels = await Hotel.find({ name: regex });
+		if (hotels.length < 1) return res.redirect('/hotels');
+		res.render('hotels/search', { hotels, page: 'Search Hotels' });
+	} catch (error) {
+		req.flash('error', 'Something went wrong in the database');
+		console.log(error);
+		res.redirect('/');
+	}
+});
+
 router.get('/hotels/new', isLoggedIn, (req, res) => {
-	res.render('hotels/new');
+	res.render('hotels/new', { page: 'Add Hotel' });
 });
 
 router.post('/hotels', isLoggedIn, upload.array('image'), async (req, res) => {
@@ -120,7 +136,7 @@ router.get('/hotels/:id', async (req, res) => {
 			});
 		}
 		let coordinates = hotel.geometry.coordinates;
-		res.render('hotels/show', { hotel, coordinates, upvoteExists, downvoteExists });
+		res.render('hotels/show', { hotel, coordinates, upvoteExists, downvoteExists, page: 'Hotel' });
 	} catch (error) {
 		req.flash('error', 'error while fetching a hotel, please try again later');
 		console.log(error);
@@ -131,7 +147,7 @@ router.get('/hotels/:id', async (req, res) => {
 router.get('/hotels/:id/edit', isLoggedIn, isHotelAuthor, async (req, res) => {
 	try {
 		let hotel = await Hotel.findById(req.params.id);
-		res.render('hotels/edit', { hotel });
+		res.render('hotels/edit', { hotel, page: 'Edit Hotel' });
 	} catch (error) {
 		req.flash('error', 'error while fetching a hotel, please try again later');
 		console.log(error);
@@ -249,42 +265,13 @@ router.get('/hotels/:id/downvote', isLoggedIn, async (req, res) => {
 		res.redirect(`/hotels/${req.params.id}`);
 	}
 });
-// router.get('/seed', async (req, res) => {
-// 	try {
-// 		for (let i = 0; i < 50; i++) {
-// 			let hotel = new Hotel({
-// 				name: 'Hotel HighRise',
-// 				geometry: {
-// 					type: 'Point',
-// 					coordinates: [ 77.2090057, 28.6138954 ]
-// 				},
-// 				address: 'delhi',
-// 				price: 10000,
-// 				images: [
-// 					{
-// 						url:
-// 							'https://res.cloudinary.com/diabrsvd6/image/upload/v1680943889/StaySense/hhbi8z180wk5okktrmy6.jpg',
-// 						filename: 'StaySense/hhbi8z180wk5okktrmy6'
-// 					}
-// 				],
-// 				upvotes: [],
-// 				downvotes: []
-// 			});
-// 			hotel.author = req.user;
-// 			await hotel.save();
-// 		}
-// 		res.send('done');
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// });
 router.get('/hotels/:id/checkout/success', (req, res) => {
 	const paymentInfo = req.session.paymentInfo;
-	res.render('hotels/success.ejs', { details: paymentInfo });
+	res.render('hotels/success.ejs', { details: paymentInfo, page: 'Success Hotel' });
 });
 router.get('/hotels/:id/checkout/cancel', (req, res) => {
 	const paymentInfo = req.session.paymentInfo;
-	res.render('hotels/failed.ejs', { details: paymentInfo });
+	res.render('hotels/failed.ejs', { details: paymentInfo, page: 'Failed Hotel' });
 });
 router.post('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 	try {
@@ -292,10 +279,10 @@ router.post('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 		const total = parseInt(req.body.adults) + parseInt(req.body.children);
 		if (total === 0) return res.redirect(`/hotels/${req.params.id}`);
 		const rooms = Math.ceil(total / 3);
-		console.log(req.body);
+		// console.log(req.body);
 		const diffTime = Math.abs(new Date(req.body.checkOutDate) - new Date(req.body.checkInDate));
 		const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-		console.log(total, rooms, diffTime, days);
+		// console.log(total, rooms, diffTime, days);
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: [ 'card' ],
 			customer_email: req.user.username,

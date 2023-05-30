@@ -6,7 +6,7 @@ const User = require('../models/user');
 router.get('/users/:id', isLoggedIn, async (req, res) => {
 	try {
 		let user = await User.findById(req.params.id);
-		res.render('users/show', { user });
+		res.render('users/show', { user, page: 'User' });
 	} catch (error) {
 		req.flash('error', 'error while fetching user, please try again later');
 		console.log(error);
@@ -16,7 +16,7 @@ router.get('/users/:id', isLoggedIn, async (req, res) => {
 router.get('/users/:id/edit', async (req, res) => {
 	try {
 		let user = await User.findById(req.params.id);
-		res.render('users/edit', { user });
+		res.render('users/edit', { user, page: 'Edit User' });
 	} catch (error) {
 		req.flash('error', 'error while fetching user, please try again later');
 		console.log(error);

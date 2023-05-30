@@ -1,9 +1,8 @@
     <header class="header-area">
         <div class="search-form d-flex align-items-center">
             <div class="container">
-                <form action="" method="get">
-                    <input type="search" name="search-form-input" id="searchFormInput"
-                        placeholder="Type your keyword ...">
+                <form action="/hotels/search" method="get">
+                    <input type="search" name="search" id="searchFormInput" placeholder="Type your keyword ...">
                     <button type="submit"><i class="icon_search"></i></button>
                 </form>
             </div>
@@ -23,9 +22,11 @@
                             </div>
                             <div class="classynav">
                                 <ul id="nav">
-                                    <li class="active"><a href="/">Home</a></li>
-                                    <li><a href="/hotels">Hotels</a></li>
-                                    <li><a href="/contact">Contact</a></li>
+                                    <li class="<%= page==='Home'?'active':'' %>"><a href="/">Home</a></li>
+                                    <li class="<%= page.includes('Hotel')?'active':'' %>"><a href="/hotels">Hotels</a>
+                                    </li>
+                                    <li class="<%= page.includes('Contact')?'active':'' %>"><a
+                                            href="/contact">Contact</a></li>
                                     <% if (currentUser) { %>
                                     <li><a>User Panel</a>
                                         <ul class="dropdown">
@@ -34,8 +35,9 @@
                                         </ul>
                                     </li>
                                     <% } else { %>
-                                    <li><a href="/login">Login</a></li>
-                                    <li><a href="/register">Register</a></li>
+                                    <li class="<%= page==='Login'?'active':'' %>"><a href="/login">Login</a></li>
+                                    <li class="<%= page==='Register'?'active':'' %>"><a href="/register">Register</a>
+                                    </li>
                                     <% } %>
                                 </ul>
                                 <div class="search-btn ml-4">
