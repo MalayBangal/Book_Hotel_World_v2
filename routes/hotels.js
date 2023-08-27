@@ -279,7 +279,7 @@ router.post('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 		const total = parseInt(req.body.adults) + parseInt(req.body.children);
 		if (total === 0) return res.redirect(`/hotels/${req.params.id}`);
 		const rooms = Math.ceil(total / 3);
-		// console.log(req.body);
+		// console.log(req.body); env
 		const diffTime = Math.abs(new Date(req.body.checkOutDate) - new Date(req.body.checkInDate));
 		const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 		// console.log(total, rooms, diffTime, days);
@@ -301,8 +301,8 @@ router.post('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 				}
 			],
 			mode: 'payment',
-			success_url: `${process.env.URL_SERV}hotels/${hotel._id}/checkout/success`,
-			cancel_url: `${process.env.URL_SERV}hotels/${hotel._id}/checkout/cancel`
+			success_url: `http://localhost:3000/hotels/${hotel._id}/checkout/success`,
+			cancel_url: `http://localhost:3000/hotels/${hotel._id}/checkout/cancel`
 		});
 		const paymentInfo = {
 			...req.body,
@@ -322,4 +322,39 @@ router.post('/hotels/:id/checkout', isLoggedIn, async (req, res) => {
 		res.redirect(`/hotels/${req.params.id}`);
 	}
 });
+
+// router.get('/hotels/:id/checkout',isLoggedIn, async (req, res) => {
+// 	try {
+// 		const hotel = await Hotel.findById(req.params.id);
+// 		const session = await stripe.checkout.sessions.create({
+// 			payment_method_types: [ 'card' ],
+// 			line_items: [
+// 				{
+// 					price_data: {
+// 						currency: 'inr',
+// 						product_data: {
+// 							name: hotel.name,
+// 							description: hotel.address,
+// 							images: [ hotel.image[0] ]
+// 						},
+// 						unit_amount: hotel.price * 100
+// 					},
+// 					quantity: 1
+// 				}
+// 			],
+// 			mode: 'payment',
+// 			success_url: 'http://localhost:3000/success',
+// 			cancel_url: 'http://localhost:3000/cancel'
+// 		});
+// 		res.redirect(session.url);
+// 	} catch (error) {
+// 		res.send(error);
+// 	}
+// });
+// router.get('/success', (req, res) => {
+// 	res.send('payment successful');
+// });
+// router.get('/cancel', (req, res) => {
+// 	res.send('payment cancelled');
+// });
 module.exports = router;

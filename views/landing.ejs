@@ -403,8 +403,7 @@
             <% for( let hotel of hotels ) { %>
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="single-post-area mb-100 wow fadeInUp" data-wow-delay="300ms">
-                    <a href="/hotels/<%= hotel._id %>" class="post-thumbnail"><img
-                            src="<%= hotel.crop(hotel.images[0].url, 600, 417) %>" alt=""></a>
+                    
                     <div class="post-meta">
                         <a class="post-date"><%= moment(hotel.createdAt).format('MMMM DD, YYYY')%></a>
                         <a href="/hotels" class="post-catagory">Hotel</a>

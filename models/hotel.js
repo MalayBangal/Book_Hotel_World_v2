@@ -44,16 +44,13 @@ const hotelSchema = new mongoose.Schema({
 		}
 	],
 	geometry: {
-		type: {
-			type: String,
-			enum: [ 'Point' ],
-			required: true
+		
+			type: {
+				type: String
+			},
+			coordinates: [ Number ]
 		},
-		coordinates: {
-			type: [ Number ],
-			required: true
-		}
-	},
+	
 	upvotes: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

@@ -7,7 +7,7 @@ let transporter = nodemailer.createTransport({
     secure: true,
     auth:{
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -17,7 +17,7 @@ const contactMail = async(contact) => {
             theme:"default",
             product:{
                 name: "StaySense",
-                link: `${process.env.URL_SERV}`
+                link: `'http://localhost:3000'`
             }
         });
         
@@ -35,7 +35,7 @@ const contactMail = async(contact) => {
         let emailBody = mailGenerator.generate(email);
         let message = {
             from: process.env.EMAIL,
-            to:process.env.EMAIL, 
+            to:process.env.EMAIL,
             subject:"StaySense - Contact",
             html:emailBody
         }

@@ -12,11 +12,11 @@ const app = express();
 require('dotenv').config();
 
 // ! MONGOOSE CONNECTION
-const DB_USERNAME = process.env.DB_USERNAME,
-	DB_USERPASS = process.env.DB_USERPASS;
-const URI = `mongodb+srv://${DB_USERNAME}:${DB_USERPASS}@cluster0.rhxgqat.mongodb.net/?retryWrites=true&w=majority`;
+// const DB_USERNAME = process.env.DB_USERNAME,
+// 	  DB_USERPASS = process.env.DB_USERPASS;
+// const URI = `mongodb+srv://${DB_USERNAME}:${DB_USERPASS}@cluster0.rhxgqat.mongodb.net/?retryWrites=true&w=majority`;
 mongoose
-	.connect(URI, {
+	.connect(process.env.DB_URI, {
 		useNewUrlParser: true,
 		useCreateIndex: true,
 		useUnifiedTopology: true,
@@ -25,15 +25,15 @@ mongoose
 	.then(() => {
 		console.log('db working');
 	})
-	.catch((err) => {
+	.catch((error) => {
 		console.log(error);
 	});
 
 // ! SESSION SETUP
-const SESSION_PASS = process.env.SESSION_PASS;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 app.use(
 	session({
-		secret: SESSION_PASS,
+		secret: SESSION_SECRET,
 		resave: true,
 		saveUninitialized: true,
 		cookie: {
