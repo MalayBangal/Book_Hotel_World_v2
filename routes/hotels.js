@@ -135,7 +135,8 @@ router.get('/hotels/:id', async (req, res) => {
 				downvotes: req.user._id
 			});
 		}
-		let coordinates = hotel.geometry.coordinates;
+		let coordinates = hotel.geometry?.coordinates;
+		// console.log(hotel.geometry,"show route");
 		res.render('hotels/show', { hotel, coordinates, upvoteExists, downvoteExists, page: 'Hotel' });
 	} catch (error) {
 		req.flash('error', 'error while fetching a hotel, please try again later');
@@ -212,12 +213,12 @@ router.get('/hotels/:id/upvote', isLoggedIn, async (req, res) => {
 				$pull: { downvotes: req.user._id },
 				$push: { upvotes: req.user._id }
 			});
-			console.log('removed your dislike and added a like');
+			//  console.log('removed your dislike and added a like');
 			res.redirect(`/hotels/${req.params.id}`);
 		} else {
 			hotel.upvotes.push(req.user);
 			await hotel.save();
-			console.log('added like');
+			// console.log('added like');
 			res.redirect(`/hotels/${req.params.id}`);
 		}
 	} catch (error) {
@@ -245,18 +246,18 @@ router.get('/hotels/:id/downvote', isLoggedIn, async (req, res) => {
 				$pull: { upvotes: req.user._id },
 				$push: { downvotes: req.user._id }
 			});
-			console.log('removed your like and added a dislike');
+			// console.log('removed your like and added a dislike');
 			res.redirect(`/hotels/${req.params.id}`);
 		} else if (downvoteExists) {
 			const hotel = await Hotel.findByIdAndUpdate(id, {
 				$pull: { downvotes: req.user._id }
 			});
-			console.log('removed dislike');
+			// console.log('removed dislike');
 			res.redirect(`/hotels/${req.params.id}`);
 		} else {
 			hotel.downvotes.push(req.user);
 			await hotel.save();
-			console.log('added dislike');
+			// console.log('added dislike');
 			res.redirect(`/hotels/${req.params.id}`);
 		}
 	} catch (error) {

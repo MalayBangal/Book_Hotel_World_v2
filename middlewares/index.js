@@ -5,8 +5,8 @@ module.exports.isLoggedIn = async (req, res, next) => {
 	if (req.isAuthenticated()) {
 		next();
 	} else {
-		console.log(req.originalUrl);
-		req.flash('error', 'please sign in');
+		//  console.log(req.originalUrl);
+		req.flash('error', 'Please sign in');
 		res.redirect('/login');
 	}
 };
@@ -17,7 +17,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
 	if (review.author._id.equals(req.user._id)) {
 		next();
 	} else {
-		req.flash('error', 'you are not permitted to do that');
+		req.flash('error', 'You are not permitted to do that');
 		res.redirect('back');
 	}
 };
@@ -28,7 +28,7 @@ module.exports.isHotelAuthor = async (req, res, next) => {
 	if (hotel.author._id.equals(req.user._id)) {
 		next();
 	} else {
-		req.flash('error', 'you are not permitted to do that');
+		req.flash('error', 'You are not permitted to do that');
 		res.redirect('back');
 	}
 };

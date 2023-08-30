@@ -244,8 +244,8 @@
                     <h4>Hotel Reviews</h4>
                     <% for(let review of hotel.reviews) { %>
                     <div class="single-room-review-area d-flex align-items-center">
-                        <div class="reviwer-thumbnail">
-                            <img src="<%= review.author.image %>" alt="">
+                        <div  class="reviwer-thumbnail">
+                            <img src="<%= review.author.image %>" alt="profile picture">
                         </div>
                         <div class="reviwer-content">
                             <div class="reviwer-title-rating d-flex align-items-center justify-content-between">
@@ -404,9 +404,9 @@
     const map = new mapboxgl.Map({
         container: 'map', // container ID
         // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-        style: 'mapbox://styles/mapbox/outdoors-v12', // style URL
+        style: 'mapbox://styles/mapbox/streets-v12', // style URL
         center: arr, // starting position [lng, lat]
-        zoom: 15 // starting zoom
+        zoom: 11 // starting zoom
     });
     const marker1 = new mapboxgl.Marker()
         .setLngLat(arr)

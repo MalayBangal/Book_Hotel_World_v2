@@ -23,7 +23,9 @@
             <div class="col-12 col-lg-8">
                 <% for( let hotel of hotels.docs ) { %>
                 <div class="single-room-area d-flex align-items-center mb-50 wow fadeInUp" data-wow-delay="100ms">
-                    
+                    <div class="room-thumbnail">
+                        <img src="<%= hotel.crop(hotel.images[0].url, 500, 361) %>" alt="">
+                    </div>
                     <div class="room-content">
                         <h2><%= hotel.name %></h2>
                         <h4>₹ <%= hotel.price %> <span>/ Day</span></h4>
@@ -49,7 +51,7 @@
                             <form action="#" method="post">
                                 <input type="email" name="nl-email" id="nlEmail" class="form-control"
                                     placeholder="Enter your email...">
-                                <button type="submit" class="btn roberto-btn w-100">Subscribe</button>
+                                <button disabled type="submit" class="btn roberto-btn w-100">Subscribe</button>
                             </form>
                         </div>
                     </div>
